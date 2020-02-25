@@ -1,0 +1,34 @@
+.inner-bg {
+    padding: 100px 0 170px 0;
+}
+
+.inner-dashboard {
+    padding: 50px 0 170px 0;
+}
+
+#logo{
+    width: 100px;
+    height: 100px;
+}
+
+#font_cetak{
+    font-family: 'Times New Roman', Times, serif;
+    font-size: large;
+}
+
+#cop_surat{
+    width: 100%;
+    height: 100%;
+}
+
+.header-media {
+    padding: 40px 0 0 0;
+}
+
+#testing {
+    align-content: flex-end;
+}
+
+#tes-card{
+    width: 200px;
+}
