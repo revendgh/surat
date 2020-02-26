@@ -12,12 +12,12 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
 
--- Dumping database structure for esurat
-DROP DATABASE IF EXISTS `esurat`;
-CREATE DATABASE IF NOT EXISTS `esurat` /*!40100 DEFAULT CHARACTER SET utf8mb4 */;
-USE `esurat`;
+-- Dumping database structure for ridho-surat
+DROP DATABASE IF EXISTS `ridho-surat`;
+CREATE DATABASE IF NOT EXISTS `ridho-surat` /*!40100 DEFAULT CHARACTER SET utf8mb4 */;
+USE `ridho-surat`;
 
--- Dumping structure for table esurat.jenis_surat
+-- Dumping structure for table ridho-surat.jenis_surat
 DROP TABLE IF EXISTS `jenis_surat`;
 CREATE TABLE IF NOT EXISTS `jenis_surat` (
   `id` tinyint(1) NOT NULL AUTO_INCREMENT,
@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS `jenis_surat` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4;
 
--- Dumping data for table esurat.jenis_surat: ~7 rows (approximately)
+-- Dumping data for table ridho-surat.jenis_surat: ~7 rows (approximately)
 /*!40000 ALTER TABLE `jenis_surat` DISABLE KEYS */;
 REPLACE INTO `jenis_surat` (`id`, `jenis_surat`) VALUES
 	(1, 'Surat Aktif'),
@@ -37,17 +37,17 @@ REPLACE INTO `jenis_surat` (`id`, `jenis_surat`) VALUES
 	(7, 'Surat Pernyataan Tidak Sedang Menerima BEASISWA');
 /*!40000 ALTER TABLE `jenis_surat` ENABLE KEYS */;
 
--- Dumping structure for table esurat.pengguna
+-- Dumping structure for table ridho-surat.pengguna
 DROP TABLE IF EXISTS `pengguna`;
 CREATE TABLE IF NOT EXISTS `pengguna` (
   `Column 1` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Dumping data for table esurat.pengguna: ~0 rows (approximately)
+-- Dumping data for table ridho-surat.pengguna: ~0 rows (approximately)
 /*!40000 ALTER TABLE `pengguna` DISABLE KEYS */;
 /*!40000 ALTER TABLE `pengguna` ENABLE KEYS */;
 
--- Dumping structure for table esurat.surat
+-- Dumping structure for table ridho-surat.surat
 DROP TABLE IF EXISTS `surat`;
 CREATE TABLE IF NOT EXISTS `surat` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -68,11 +68,11 @@ CREATE TABLE IF NOT EXISTS `surat` (
   CONSTRAINT `FK_surat_jenis_surat` FOREIGN KEY (`id_jenis_surat`) REFERENCES `jenis_surat` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Dumping data for table esurat.surat: ~0 rows (approximately)
+-- Dumping data for table ridho-surat.surat: ~0 rows (approximately)
 /*!40000 ALTER TABLE `surat` DISABLE KEYS */;
 /*!40000 ALTER TABLE `surat` ENABLE KEYS */;
 
--- Dumping structure for table esurat.surat_mahasiswa
+-- Dumping structure for table ridho-surat.surat_mahasiswa
 DROP TABLE IF EXISTS `surat_mahasiswa`;
 CREATE TABLE IF NOT EXISTS `surat_mahasiswa` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -85,11 +85,11 @@ CREATE TABLE IF NOT EXISTS `surat_mahasiswa` (
   CONSTRAINT `FK__surat` FOREIGN KEY (`id_surat`) REFERENCES `surat` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Dumping data for table esurat.surat_mahasiswa: ~0 rows (approximately)
+-- Dumping data for table ridho-surat.surat_mahasiswa: ~0 rows (approximately)
 /*!40000 ALTER TABLE `surat_mahasiswa` DISABLE KEYS */;
 /*!40000 ALTER TABLE `surat_mahasiswa` ENABLE KEYS */;
 
--- Dumping structure for table esurat.surat_matkul
+-- Dumping structure for table ridho-surat.surat_matkul
 DROP TABLE IF EXISTS `surat_matkul`;
 CREATE TABLE IF NOT EXISTS `surat_matkul` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -100,7 +100,7 @@ CREATE TABLE IF NOT EXISTS `surat_matkul` (
   CONSTRAINT `FK_surat_matkul_surat` FOREIGN KEY (`id_surat`) REFERENCES `surat` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Dumping data for table esurat.surat_matkul: ~0 rows (approximately)
+-- Dumping data for table ridho-surat.surat_matkul: ~0 rows (approximately)
 /*!40000 ALTER TABLE `surat_matkul` DISABLE KEYS */;
 /*!40000 ALTER TABLE `surat_matkul` ENABLE KEYS */;
 

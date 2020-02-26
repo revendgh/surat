@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link href="{{url('css/bootstrap.min.css')}}" rel="stylesheet" type="text/css">
-    <link href="{{url('css/testing.css')}}" rel="stylesheet" type="text/css">
-    <script src="{{url('jquery/jquery.js')}}"></script>
+    <style>
+        @include('mahasiswa.cetak.style')
+    </style>
     
     <title>
         E-Surat
@@ -16,7 +16,7 @@
     <div class="container" id="font_cetak">
         <!-- COP SURAT -->
         <div class="row justify-content-center">
-            <img src="{{url('gambar/Logo Surat.png')}}" id="cop_surat" alt="">
+            <img src="gambar/Logo Surat.png" id="cop_surat" alt="">
         </div>
         <!-- END COP SURAT -->
 
@@ -138,8 +138,5 @@
             </div>
         </div>
     </div>
-    
-    <script type="text/javascript" src="{{url('jquery/jquery.min.js')}}"></script>
-    <script type="text/javascript" src="{{url('js/bootstrap.min.js')}}"></script>
 </body>
 </html>

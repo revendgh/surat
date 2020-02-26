@@ -8,7 +8,6 @@ use App\pengguna;
 use App\jenis_surat;
 use App\surat_mahasiswa;
 use App\surat_matkul;
-use Barryvdh\DomPDF\PDF as DomPDFPDF;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 use PDF;
 
@@ -200,10 +199,10 @@ class surat extends Controller
         $tanggal = $split[0].' '.$bulan[ (int) $split[1] ].' '.$split[2];
 
         $pdf = PDF::loadView('mahasiswa.cetak.ta_individu', compact('tanggal'));
-        //dd($pdf);
+        // dd($pdf);
 	    return $pdf->download();
 
-        // return view('mahasiswa.cetak.ta_individu', compact('tanggal'));
+        return view('mahasiswa.cetak.ta_individu', compact('tanggal'));
     }
 
     public function show($id)
