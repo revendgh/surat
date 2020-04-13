@@ -8,7 +8,7 @@
         <h3 align=center>TESTING FORM TUGAS AKHIR MAHASISWA</h3><p>
             @if(count($errors) > 0)
             <div class="alert alert-danger">
-                HARAP DIISI SESUAI DENGAN YANG DIMINTA
+                MOHON UNTUK MENGISI DATA DENGAN FORMAT YANG SESUAI
             </div>
             @endif
         <div class="card">
@@ -20,9 +20,9 @@
                     <div class="form-group">
                         <table id="list">
                             <thead>
-                                <td colspan="3">DATA MAHASISWA</td>
+                                <td colspan="3"><label for="mahasiswa">DATA MAHASISWA</label></td>
                             </thead>
-                            <tr>  
+                            <tr>     
                                 <td><input type="text" maxlength="8" name="nim[]" placeholder="NIM" class="form-control"></td>
                                 <td><input type="text" name="nama[]" placeholder="Nama" class="form-control"></td>
                                 <td><input type="text" name="prodi[]" placeholder="Prodi" class="form-control"></td>  
@@ -82,10 +82,18 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="keterangan">Keterangan Pemohon</label>
-                            <textarea class="form-control" name="keterangan" id="keterangan" cols="10" rows="10"></textarea>
+                        <table id="list-keterangan" width="60%">
+                            <thead>
+                                <td colspan="2"><label for="keterangan">Keterangan Pemohon</label></td>
+                            </thead>
+                            <tr>
+                                <td><input type="text" name="keterangan[]" placeholder="Keterangan" class="form-control"></td>  
+                                <td><button type="button" name="add-keterangan" id="add-keterangan" class="btn btn-success">Tambah</button></td>  
+                            </tr>  
+                        </table>
                     </div>
-                    
+                    <br>
+
                     <button type="submit" class="btn btn-primary form-control">SUBMIT</button>
                 </form>
                 <!-- END FORM CODE -->
@@ -103,12 +111,28 @@
 
         $('#add').click(function(){  
             i++;  
-            $('#list').append('<tr id="row'+i+'" class="dynamic-added"><td><input type="text" name="nim[]" placeholder="NIM" class="form-control"/></td><td><input type="text" name="nama[]" placeholder="Nama" class="form-control"/></td><td><input type="text" name="prodi[]" placeholder="Prodi" class="form-control"/></td><td><button type="button" name="remove" id="'+i+'" class="btn btn-danger btn_remove">X</button></td></tr>');  
+            $('#list').append('<tr id="row'+i+'" class="dynamic-added"><td><input type="text" name="nim[]" placeholder="NIM" class="form-control"/></td><td><input type="text" name="nama[]" placeholder="Nama" class="form-control"/></td><td><input type="text" name="prodi[]" placeholder="Prodi" class="form-control"/></td><td><button type="button" name="remove" idn="'+i+'" class="btn btn-danger btn_remove">X</button></td></tr>');  
         });  
 
         $(document).on('click', '.btn_remove', function(){  
+            var button_id = $(this).attr("idn");   
+            $('#row'+button_id+'').remove();
+            i--;  
+        });
+    });
+
+    $(document).ready(function(){      
+        var n=1;
+
+        $('#add-keterangan').click(function(){  
+            n++;  
+            $('#list-keterangan').append('<tr id="row'+n+'" class="dynamic-added"><td><input type="text" name="keterangan[]" placeholder="Keterangan" class="form-control"></td><td><button type="button" name="remove" id="'+n+'" class="btn btn-danger btn_remove">X</button></td></tr>');  
+        });
+
+        $(document).on('click', '.btn_remove', function(){  
             var button_id = $(this).attr("id");   
-            $('#row'+button_id+'').remove();  
+            $('#row'+button_id+'').remove();
+            n--;  
         });
     });
 </script>

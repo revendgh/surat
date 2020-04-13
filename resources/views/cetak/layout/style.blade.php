@@ -14,6 +14,10 @@
     padding: 50px 0 170px 0;
 }
 
+#dpm{
+    padding: 20px 0 0 0;
+}
+
 #logo{
     width: 100px;
     height: 100px;
@@ -21,7 +25,7 @@
 
 #font_cetak{
     font-family: 'Times New Roman', Times, serif;
-    font-size: large;
+    font-size: 16px;
 }
 
 #cop_surat{

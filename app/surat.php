@@ -20,9 +20,17 @@ class surat extends Model
     	'tgl_akhir',
     	'no_hp',
     	'pemilik_no',
-    	'keterangan',
+		'keterangan',
+		'tahun_akademik',
+		'semester',
+		'ipk',
+		'judul_ta',
+		'dosen',
+		'jabatan_dosen',
+		'no_dosen',
     	'created_at',
-    	'updated_at'
+		'updated_at',
+		'status',
     ];
 
     public function jenis_surat()

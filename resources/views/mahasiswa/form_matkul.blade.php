@@ -6,16 +6,25 @@
 <div class="inner-dashboard">
     <div class="container-fluid">
         <h3 align=center>TESTING FORM TUGAS MATA KULIAH MAHASISWA</h3><p>
+            @if(count($errors) > 0)
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{$error}}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
         <div class="card">
             <div class="card-body">
 
                 <!-- FORM CODE -->
-                <form action="/mahasiswa/create" method="post">
+                <form action="/mahasiswa/create_matkul" method="post">
                     @csrf
                     <div class="form-group">
-                        <table id="list">
+                        <table id="list" width="60%">
                             <thead>
-                                <td colspan="3">DATA MAHASISWA</td>
+                                <td colspan="3"><label for="mahasiswa">DATA MAHASISWA</label></td>
                             </thead>
                             <tr>  
                                 <td><input type="text" maxlength="8" name="nim[]" placeholder="NIM" class="form-control"></td>
@@ -26,11 +35,11 @@
                         </table>
                     </div>
                     <div class="form-group">
-                        <table id="list-matkul">
+                        <table id="list-matkul" width="60%">
                             <thead>
-                                <td colspan="2">MATA KULIAH</td>
+                                <td colspan="2"><label for="matkul">MATA KULIAH</label></td>
                             </thead>
-                            <tr>  
+                            <tr>
                                 <td><input type="text" name="matkul[]" placeholder="Mata Kuliah" class="form-control"></td>  
                                 <td><button type="button" name="add-matkul" id="add-matkul" class="btn btn-success">Tambah</button></td>  
                             </tr>  
@@ -38,7 +47,8 @@
                     </div>
                     <div class="form-group">
                         <label for="keperluan">KEPERLUAN</label><br>
-                            <select id="keperluan" class="form-control">
+                            <select id="keperluan" name="keperluan" class="form-control">
+                                <option>-</option>
                                 @foreach ($jenis_surat as $jenis)
                                     <option value="{{$jenis->id}}">{{$jenis->jenis_surat}}</option>                                
                                 @endforeach
@@ -55,22 +65,22 @@
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label for="tujuan">ALAMAT INSTANSI</label>
-                                <input type="text" name="instansi" placeholder="Contoh : Jln. xxxx" class="form-control">
+                                <input type="text" name="alamat" placeholder="Contoh : Jln. xxxx" class="form-control">
                         </div>
                         <div class="form-group col-md-6">
                             <label for="tujuan">KABUPATEN/KOTA</label>
-                                <input type="text" name="instansi" placeholder="Contoh : Balikpapan" class="form-control">
+                                <input type="text" name="kota" placeholder="Contoh : Balikpapan" class="form-control">
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-group col-sm-6">
-                            <label for="tgl_akhir">Tanggal Mulai</label>
+                            <label for="tgl_akhir">TANGGAL MULAI</label>
                                 <div class="input-group date">
                                     <input type="date" name="tgl_awal" class="form-control">
                                 </div>
                         </div>
                         <div class="form-group col-md-6">
-                            <label for="tgl_akhir">Tanggal Selesai</label>
+                            <label for="tgl_akhir">TANGGAL SELESAI</label>
                                 <div class="input-group date">
                                     <input type="date" name="tgl_akhir" class="form-control">
                                 </div>
@@ -78,18 +88,26 @@
                     </div>
                     <div class="form-row">
                         <div class="form-group col-md-6">
-                            <label for="pemilik">Pemilik No.</label>
+                            <label for="pemilik">PEMILIK NO.</label>
                                 <input type="text" name="pemilik" placeholder="Nama Pemilik" class="form-control">
                         </div>
                         <div class="form-group col-md-6">
-                            <label for="tujuan">No. Handphone</label>
+                            <label for="tujuan">NO. HANDPHONE</label>
                                 <input type="text" maxlength="12" name="no_hp" placeholder="081xxxxxxxxx" class="form-control">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="keterangan">Keterangan Pemohon</label>
-                            <textarea class="form-control" name="keterangan" id="keterangan" cols="10" rows="10"></textarea>
+                        <table id="list-keterangan" width="60%">
+                            <thead>
+                                <td colspan="2"><label for="keterangan">KETERANGAN PEMOHON</label></td>
+                            </thead>
+                            <tr>
+                                <td><input type="text" name="keterangan[]" placeholder="Keterangan" class="form-control"></td>  
+                                <td><button type="button" name="add-keterangan" id="add-keterangan" class="btn btn-success">Tambah</button></td>  
+                            </tr>  
+                        </table>
                     </div>
+                    <br>
                     
                     <button type="submit" class="btn btn-primary form-control">SUBMIT</button>
                 </form>
@@ -123,6 +141,20 @@
         $('#add-matkul').click(function(){  
             i++;  
             $('#list-matkul').append('<tr id="row'+i+'" class="dynamic-added"><td><input type="text" name="matkul[]" placeholder="Mata Kuliah" class="form-control"></td><td><button type="button" name="remove" id="'+i+'" class="btn btn-danger btn_remove">X</button></td></tr>');  
+        });
+
+        $(document).on('click', '.btn_remove', function(){  
+            var button_id = $(this).attr("id");   
+            $('#row'+button_id+'').remove();  
+        });
+    });
+
+    $(document).ready(function(){      
+        var i=1;
+
+        $('#add-keterangan').click(function(){  
+            i++;  
+            $('#list-keterangan').append('<tr id="row'+i+'" class="dynamic-added"><td><input type="text" name="keterangan[]" placeholder="Keterangan Pemohon" class="form-control"></td><td><button type="button" name="remove" id="'+i+'" class="btn btn-danger btn_remove">X</button></td></tr>');  
         });
 
         $(document).on('click', '.btn_remove', function(){  

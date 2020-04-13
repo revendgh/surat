@@ -4,21 +4,14 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class surat_mahasiswa extends Model
+class surat_keterangan extends Model
 {
-
-	protected $table = 'surat_mahasiswa';
+    protected $table = 'surat_keterangan';
     protected $fillable = 
     [
         'id',
-    	'id_surat',
-        'nim',
-        'nama',
-        'prodi',
-        'tempat',
-        'tgl_lahir',
-        'alamat_asal',
-        'alamat_skrg'
+        'id_surat',
+    	'keterangan'
     ];
 
     public $timestamps = false;
