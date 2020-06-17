@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class surat extends Model
 {
-     protected $table = 'surat';
+    protected $table = 'surat';
     
     protected $fillable = 
     [
@@ -30,6 +30,7 @@ class surat extends Model
 		'no_dosen',
     	'created_at',
 		'updated_at',
+		'date_expired',
 		'status',
     ];
 

@@ -118,6 +118,7 @@ class surat_controller extends Controller
         $surat->tgl_akhir = $tgl_akhir;
         $surat->pemilik_no = $request->pemilik;
         $surat->no_hp = $request->no_hp;
+        $surat->date_expired = $request->tgl_awal;
 
         $surat->save();
         
@@ -199,6 +200,7 @@ class surat_controller extends Controller
         $surat->tgl_akhir = $tgl_akhir;
         $surat->pemilik_no = $request->pemilik;
         $surat->no_hp = $request->no_hp;
+        $surat->date_expired = $request->tgl_awal;
 
         $surat->save();
         
@@ -250,6 +252,8 @@ class surat_controller extends Controller
             'tahun' => 'required',
         ]); 
 
+        $expired = date_add(now(), date_interval_create_from_date_string("10 days"));
+
         $surat = new surat;
         $mahasiswa = new surat_mahasiswa;
 
@@ -257,6 +261,7 @@ class surat_controller extends Controller
         $surat->keterangan = $request->keperluan;
         $surat->semester = $request->semester;
         $surat->tahun_akademik = $request->tahun;
+        $surat->date_expired = $expired;
 
         $surat->save();
 
@@ -300,6 +305,7 @@ class surat_controller extends Controller
         $mentah_awal = explode('-', $request->tgl_lahir);
         $tgl_lahir = $mentah_awal[2].' '.$bulan[ (int) $mentah_awal[1] ].' '.$mentah_awal[0];
 
+        $expired = date_add(now(), date_interval_create_from_date_string("10 days"));
         $surat = new surat;
         $mahasiswa = new surat_mahasiswa;
 
@@ -308,6 +314,7 @@ class surat_controller extends Controller
         $surat->ipk = $request->ipk;
         $surat->tahun_akademik = $request->tahun;
         $surat->no_hp = $request->no_hp;
+        $surat->date_expired = $expired;
         $mahasiswa->nim = $request->nim;
         $mahasiswa->nama = $request->nama;
         $mahasiswa->prodi = $request->prodi;
@@ -371,6 +378,7 @@ class surat_controller extends Controller
         $surat->dosen = $request->dosen;
         $surat->jabatan_dosen = $request->jabatan;
         $surat->no_dosen = $request->no_dosen;
+        $surat->date_expired = $request->tgl_awal;
         $mahasiswa->nim = $request->nim_p;
         $mahasiswa->nama = $request->nama_p;
         $mahasiswa->prodi = $request->prodi_p;
@@ -409,20 +417,20 @@ class surat_controller extends Controller
         $tanggal = $split[0].' '.$bulan[ (int) $split[1] ].' '.$split[2];
         $data = DB::table('surat')
                     ->select('surat.*', 'jenis.*')
-                    ->where('surat.id', '=', '28')
+                    ->where('surat.id', '=', '30')
                     ->join('jenis_surat as jenis', 'jenis.id', '=', 'surat.id_jenis_surat')
                     ->get();
         $mahasiswa = DB::table('surat_mahasiswa as mahasiswa')
                     ->select('mahasiswa.*')
-                    ->where('id_surat', '28')
+                    ->where('id_surat', '30')
                     ->get();
         $matkul = DB::table('surat_matkul as matkul')
                     ->select('matkul.*')
-                    ->where('id_surat', '28')
+                    ->where('id_surat', '30')
                     ->get();
         $keterangan = DB::table('surat_keterangan as keterangan')
                     ->select('keterangan.*')
-                    ->where('id_surat', '28')
+                    ->where('id_surat', '30')
                     ->get();            
         $count_mhs = count($mahasiswa);
         $count_matkul = count($matkul)-1;
@@ -448,6 +456,12 @@ class surat_controller extends Controller
 
             return view('cetak.surat_matkul', compact('tanggal','mahasiswa','data','count_mhs','count_matkul','matkul','keterangan'));
         }
+        elseif ($id_surat == 6) {
+            $pdf = PDF::loadView('cetak.surat_ta_dpm', compact('tanggal','mahasiswa','data','count_mhs','keterangan'));
+            return $pdf->stream('Surat Permohonan TA DPM.pdf');
+
+            return view('cetak.surat_ta', compact('tanggal','mahasiswa','data','count_mhs','keterangan'));
+        }
         elseif ($id_surat == 7)
         {
             $pdf = PDF::loadView('cetak.surat_tmb', compact('tanggal','mahasiswa','data','count_mhs'));
@@ -457,42 +471,197 @@ class surat_controller extends Controller
         }
     }
 
-    public function show($id)
-    {
-        //
+    //-------------------------- admin ----------------------//
+
+    public function index_admin()
+    { 
+        $master =   DB::select(DB::raw("SELECT a.id, a.created_at, b.nim as nim, b.nama as nama, b.prodi as prodi, c.jenis_surat
+        FROM surat AS a, surat_mahasiswa AS b, jenis_surat AS c
+        WHERE a.id_jenis_surat = c.id and
+                a.id = b.id_surat and
+                a.status IS NULL
+        GROUP BY b.id_surat
+        ORDER BY a.created_at ASC"));
+
+        return view('admin.dashboard', compact('master'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
+    public function show_admin($id)
     {
-        //
+        $surat = DB::select("Select a.*, b.jenis_surat as jenis
+        from surat as a, jenis_surat as b
+        where a.id_jenis_surat = b.id and
+              a.id = '$id'");
+
+        $ketua = DB::select("SELECT a.*
+        FROM surat_mahasiswa AS a, surat AS b
+        WHERE a.id_surat = b.id AND
+                a.id_surat = '$id'
+        GROUP BY a.id_surat");
+
+        $anggota = DB::select("SELECT a.nama AS nama
+        FROM surat_mahasiswa AS a, surat AS b
+        WHERE a.id_surat = b.id AND
+                a.id_surat = '$id' and
+                a.nama <> (SELECT a.nama AS nama
+        FROM surat_mahasiswa AS a, surat AS b
+        WHERE a.id_surat = b.id AND
+                a.id_surat = '$id'
+        GROUP BY a.id_surat)");
+
+        $mahasiswa = DB::select("Select a.*
+        from surat_mahasiswa as a, surat as b
+        where a.id_surat = b.id and
+              a.id_surat = '$id'");
+        
+        $keterangan = DB::select("Select a.*
+        from surat_keterangan as a, surat as b
+        where a.id_surat = b.id and
+              a.id_surat = '$id'");
+        
+        $matkul = DB::select("Select a.*
+        from surat_matkul as a, surat as b
+        where a.id_surat = b.id and
+              a.id_surat = '$id'");
+
+        $jumlah_mhs = DB::select("Select count(a.id_surat) as jumlah
+        from surat_mahasiswa as a, surat as b
+        where a.id_surat = b.id and
+              a.id_surat = '$id'");
+        
+        $jumlah_matkul = DB::select("Select count(a.id_surat) as jumlah
+        from surat_matkul as a, surat as b
+        where a.id_surat = b.id and
+              a.id_surat = '$id'");
+
+        foreach($surat as $data)
+            $id_jenis = $data->id_jenis_surat;
+
+        foreach($jumlah_mhs as $data)
+            $jumlah = $data->jumlah;
+        
+        foreach($jumlah_matkul as $data)
+            $jumlah_mk = $data->jumlah;
+
+        if($id_jenis == 1)
+            return view('admin.detail_sk_aktif', compact('surat', 'mahasiswa'));
+        
+        elseif($id_jenis == 6)
+            return view('admin.detail_dpm', compact('surat', 'jumlah','ketua', 'anggota'));
+        
+        elseif($id_jenis == 7)
+            return view('admin.detail_sp', compact('surat', 'mahasiswa'));
+        
+        else
+            return view('admin.detail', compact('surat', 'mahasiswa','jumlah_mhs', 'jumlah_mk', 'matkul', 'keterangan'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
+    public function index_arsip()
     {
-        //
+        $master =   DB::select(DB::raw("SELECT a.id, a.updated_at, b.nim as nim, b.nama as nama, b.prodi as prodi, c.jenis_surat
+        FROM surat AS a, surat_mahasiswa AS b, jenis_surat AS c
+        WHERE a.id_jenis_surat = c.id and
+                a.id = b.id_surat and
+                a.status = 1
+        GROUP BY b.id_surat
+        ORDER BY a.created_at ASC"));
+
+        return view('admin.arsip', compact('master'));
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
+    public function update_admin_terima($id)
     {
-        //
+        $query = DB::table('surat')
+                    ->where('id', $id)
+                    ->update(['status' => 1], ['updated_at' => now()]);
+        
+        return redirect('/admin/pemohon/'.$id)->with('success', 'Data Berhasil Diverifikasi');
+    }
+
+    public function update_admin_tolak($id)
+    {
+        $query = DB::table('surat')
+                    ->where('id', $id)
+                    ->update(['status' => 0]);
+        
+        return redirect('/admin/dashboard')->with('success', 'Data Berhasil Diverifikasi');
+    }
+
+    public function cetak_admin($id)
+    {
+        $data = DB::table('surat')
+                    ->select('surat.*', 'jenis.*')
+                    ->where('surat.id', $id)
+                    ->join('jenis_surat as jenis', 'jenis.id', '=', 'surat.id_jenis_surat')
+                    ->get();
+        $mahasiswa = DB::table('surat_mahasiswa as mahasiswa')
+                    ->select('mahasiswa.*')
+                    ->where('id_surat', $id)
+                    ->get();
+        $matkul = DB::table('surat_matkul as matkul')
+                    ->select('matkul.*')
+                    ->where('id_surat', $id)
+                    ->get();
+        $keterangan = DB::table('surat_keterangan as keterangan')
+                    ->select('keterangan.*')
+                    ->where('id_surat', $id)
+                    ->get();            
+        $count_mhs = count($mahasiswa);
+        $count_matkul = count($matkul)-1;
+        $count_ket = count($keterangan);
+
+        $bulan = array (1 => 'Januari',
+                            'Februari',
+                            'Maret',
+                            'April',
+                            'Mei',
+                            'Juni',
+                            'Juli',
+                            'Agustus',
+                            'September',
+                            'Oktober',
+                            'November',
+                            'Desember');
+
+        foreach($data as $surat)
+        {   
+            $tes = \Carbon\Carbon::parse($surat->created_at); 
+            $mentah_awal = explode('-', $tes->format('Y-m-d'));
+            $tanggal = $mentah_awal[2].' '.$bulan[ (int) $mentah_awal[1] ].' '.$mentah_awal[0];
+        }
+
+        foreach($data as $i)
+            $id_surat = $i->id_jenis_surat;
+        
+        if ($id_surat == 1) {
+            $pdf = PDF::loadView('cetak.surat_sk', compact('tanggal','mahasiswa','data'));
+            return $pdf->stream('SK Aktif Kuliah.pdf');
+        }
+        elseif ($id_surat == 2 || $id_surat == 3) {
+            $pdf = PDF::loadView('cetak.surat_ta', compact('tanggal','mahasiswa','data','count_mhs','keterangan'));
+            return $pdf->stream('Surat Permohonan TA.pdf');
+
+            return view('cetak.surat_ta', compact('tanggal','mahasiswa','data','count_mhs','keterangan'));
+        }
+        elseif ($id_surat == 4 || $id_surat == 5)
+        {
+            $pdf = PDF::loadView('cetak.surat_matkul', compact('tanggal','mahasiswa','data','count_mhs','count_matkul','matkul','keterangan'));
+            return $pdf->stream('Surat Permohonan Matkul.pdf');
+
+            return view('cetak.surat_matkul', compact('tanggal','mahasiswa','data','count_mhs','count_matkul','matkul','keterangan'));
+        }
+        elseif ($id_surat == 6) {
+            $pdf = PDF::loadView('cetak.surat_ta_dpm', compact('tanggal','mahasiswa','data','count_mhs','keterangan'));
+            return $pdf->stream('Surat Permohonan TA DPM.pdf');
+
+            return view('cetak.surat_ta', compact('tanggal','mahasiswa','data','count_mhs','keterangan'));
+        }
+        elseif ($id_surat == 7)
+        {
+            $pdf = PDF::loadView('cetak.surat_tmb', compact('tanggal','mahasiswa','data','count_mhs'));
+            return $pdf->stream('Surat Pernyataan.pdf');
+
+            return view('cetak.surat_tmb', compact('tanggal','mahasiswa','data','count_mhs'));
+        }
     }
 }

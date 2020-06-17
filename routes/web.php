@@ -27,4 +27,11 @@ Route::post('/mahasiswa/create_ta', 'surat_controller@store');
 Route::post('/mahasiswa/create_matkul', 'surat_controller@store_matkul');
 Route::post('/mahasiswa/create_sk', 'surat_controller@store_sk');
 Route::post('/mahasiswa/create_sp', 'surat_controller@store_sp');
-Route::post('/mahasiswa/create_ta_dpm', 'surat_controller@store_ta_dpm');
+Route::post('/mahasiswa/create_ta_dpm', 'surat_controller@store_ta_dpmp');
+
+Route::get('/admin/dashboard', 'surat_controller@index_admin');
+Route::get('/admin/arsip/terima', 'surat_controller@index_arsip');
+Route::get('/admin/pemohon/{id}', 'surat_controller@show_admin');
+Route::get('/admin/terima/{id}',  'surat_controller@update_admin_terima');
+Route::get('/admin/tolak/{id}',  'surat_controller@update_admin_tolak');
+Route::get('/admin/cetak/{id}', 'surat_controller@cetak_admin');

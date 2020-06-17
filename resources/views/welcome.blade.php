@@ -11,39 +11,31 @@
     </title>
 </head>
 
-<body>
-    <div class="inner-bg">
+<body style="background-color: #013880">
+    <div class="inner-welcome">
         <div class="container-fluid">
             <div class="d-flex justify-content-center">
-                <div class="card-padding">
-                    <div class="card-header-padding">
-                        <h3 align="center">
-                            E-Surat<br>
-                            ITK
-                        </h3>
-                    </div>
-                    <div class="card-body">
-                        <table cellpadding="20">
-                            <tr>
-                                <td>
-                                    <a href="/mahasiswa">
-                                        <button class="btn btn-primary">
-                                            Halaman<br>
-                                            Mahasiswa
-                                        </button>
-                                    </a>
-                                </td>
-                                <td>
-                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
-                                        Halaman<br>
-                                        Admin
-                                    </button>
-                                </td>
-                            </tr>
-                        </table>
+                <div class="box">
+                    <center><img id="logo_welcome" src="{{url('gambar/itk.png')}}"></center>
+                    <h2 id="judul"><center>Sistem Aplikasi E-Surat</center></h2>
+                    <h2><center>Masuk Sebagai</center></h2><p>
+                    <div class="row">
+                        <div class="col-md-6"><center>
+                            <a href="/mahasiswa"><button class="btn btn-white form-control">
+                                <img src="{{url('gambar/mhs.png')}}"><br>
+                                PEMOHON
+                            </button></a></center>
+                        </div>
+                        <div class="col-md-6">
+                            <button type="button" class="btn btn-white form-control" data-toggle="modal" data-target="#myModal">
+                                <img src="{{url('gambar/admin.png')}}"><br>
+                                ADMINISTRATOR
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
+            <footer><Center>Copyright © 2020 Institut Teknologi Kalimantan</Center> </footer>
         </div>
 
         <!-- Modal -->
